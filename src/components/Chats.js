@@ -11,6 +11,7 @@ const Chats = () => {
     const {user} = useAuth()
     const [loading, setLoading] = useState(true)
 
+    console.log(user)
     const handleLogout = async() => {
         await auth.signOut();
         history.push('/')
@@ -18,7 +19,7 @@ const Chats = () => {
 
     const getFile = async (url) => {
         const response = await fetch(url)
-        const data = response.blob()
+        const data = await response.blob()
 
         return new File([data], "userPhoto.jpg", {type: 'image/jpeg'})
     }
@@ -33,7 +34,7 @@ const Chats = () => {
         axios.get('https://api.chatengine.io/users/me', {
             headers: {
                 "project-id": "84bd693b-58fc-4ace-b77b-027982333383",
-                "user-email": user.email,
+                "user-name": user.email,
                 "user-secret" : user.uid
             }
         })
@@ -42,16 +43,16 @@ const Chats = () => {
         })
         // If its a new user
         .catch(() => {
-            let formData = new FormData();
-            formData.append('email', user.email)
-            formData.append('username', user.email)
-            formData.append('secret', user.uid)
+            let formdata = new FormData();
+            formdata.append('email', user.email)
+            formdata.append('username', user.email)
+            formdata.append('secret', user.uid)
 
             getFile(user.photoURL)
                 .then(avatar => {
-                    formData.append('avatar', avatar, avatar.name);
+                    formdata.append('avatar', avatar, avatar.name);
                     axios.post('https://api.chatengine.io/users',
-                                formData,
+                                formdata,
                                 {headers: {"private-key": "756abd22-f7e8-4dec-9216-782268249f4d"}}
                     )
                     .then(() => setLoading(false))
@@ -60,7 +61,7 @@ const Chats = () => {
         })
     }, [user,history])
 
-    // if(!user || loading ) return 'Loading'
+    if(!user || loading ) return 'Loading'
 
     return (
         <div className="chats-page">
@@ -75,8 +76,8 @@ const Chats = () => {
             <ChatEngine 
                 height="calc(100vh - 66px)"
                 projectID="84bd693b-58fc-4ace-b77b-027982333383"
-                userName="user.email"
-                userSecret="user.uid"
+                userName={user.email}
+                userSecret={user.uid}
             />
         </div>
     )

@@ -11,6 +11,7 @@ export const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null)
     const history = useHistory()
 
+    
     useEffect(() => {
         auth.onAuthStateChanged((user) => {
             setUser(user)
