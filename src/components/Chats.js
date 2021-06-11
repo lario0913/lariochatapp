@@ -1,4 +1,4 @@
-import React,{useState, useRef, useEffect} from 'react'
+import React,{useState, useEffect} from 'react'
 import {useHistory} from 'react-router-dom'
 import {ChatEngine} from 'react-chat-engine'
 import {auth} from '../firebase'
@@ -61,6 +61,7 @@ const Chats = () => {
         })
     }, [user,history])
 
+    
     if(!user || loading ) return 'Loading'
 
     return (
